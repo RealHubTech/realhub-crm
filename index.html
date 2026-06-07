@@ -338,17 +338,29 @@ function render() {
       var m = sd[i];
       var gk = otomatikKategori(m);
       var isSecili = seciliHas(m.id);
-      html += '<tr class="' + (isSecili ? 'secili' : '') + '" style="cursor:pointer">';
-      html += '<td onclick="event.stopPropagation()"><input type="checkbox" ' + (isSecili ? 'checked' : '') + ' onchange="togSec(' + m.id + ',this.checked)"></td>';
-      html += '<td onclick="acDetay('" + m.id + "')"><div style="display:flex;align-items:center;gap:10px"><div class="avatar">' + initials(m.ad, m.soyad) + '</div><div><div style="font-weight:500">' + (m.ad||'') + ' ' + (m.soyad||'') + '</div>' + (m['not'] ? '<div style="font-size:11px;color:var(--t2)">' + (m['not'].length > 45 ? m['not'].slice(0,45) + '...' : m['not']) + '</div>' : '') + '</div></div></td>';
-      html += '<td onclick="acDetay('" + m.id + "')" style="font-family:\'DM Mono\',monospace">' + (m.tel || '-') + '</td>';
-      html += '<td onclick="acDetay('" + m.id + "')" style="color:var(--t2)">' + (m.mail || '-') + '</td>';
-      html += '<td onclick="acDetay('" + m.id + "')"><span class="badge ' + (KB[gk] || 'b-gray') + '">' + (gk || '-') + '</span></td>';
-      html += '<td onclick="acDetay('" + m.id + "')" style="color:var(--t3);font-size:12px">' + (m.ziyaret ? new Date(m.ziyaret).toLocaleDateString('tr-TR') : m.eklenme || '') + '</td>';
-      html += '<td><div style="display:flex;gap:4px"><button class="btn btn-sm" onclick="acDuzenle('" + m.id + "')">Duzenle</button><button class="btn btn-sm btn-d" onclick="mSil('" + m.id + "')">Sil</button></div></td>';
-      html += '</tr>';
+      var mid = m.id;
+      html += '<tr class="' + (isSecili ? 'secili' : '') + '" style="cursor:pointer" data-id="' + mid + '">';
+      html += '<td onclick="event.stopPropagation()"><input type="checkbox" ' + (isSecili ? 'checked' : '') + ' onchange="togSec(this.closest('tr').dataset.id,this.checked)"></td>';
+      html += '<td class="js-detay"><div style="display:flex;align-items:center;gap:10px"><div class="avatar">' + initials(m.ad, m.soyad) + '</div><div><div style="font-weight:500">' + (m.ad||'') + ' ' + (m.soyad||'') + '</div>' + (m['not'] ? '<div style="font-size:11px;color:var(--t2)">' + (m['not'].length > 45 ? m['not'].slice(0,45) + '...' : m['not']) + '</div>' : '') + '</div></div></td>';
+      html += '<td class="js-detay" style="font-family:DM Mono,monospace">' + (m.tel || '-') + '</td>';
+      html += '<td class="js-detay" style="color:var(--t2)">' + (m.mail || '-') + '</td>';
+      html += '<td class="js-detay"><span class="badge ' + (KB[gk] || 'b-gray') + '">' + (gk || '-') + '</span></td>';
+      html += '<td class="js-detay" style="color:var(--t3);font-size:12px">' + (m.ziyaret ? new Date(m.ziyaret).toLocaleDateString('tr-TR') : m.eklenme || '') + '</td>';
+      html += '<td><div style="display:flex;gap:4px"><button class="btn btn-sm js-duzenle">Duzenle</button><button class="btn btn-sm btn-d js-sil">Sil</button></div></td>';
+html += '</tr>';
     }
     tb.innerHTML = html;
+
+    // Event delegation - onclick yerine merkezi yonetim
+    tb.onclick = function(e) {
+      var tr = e.target.closest('tr');
+      if (!tr) return;
+      var id = tr.dataset.id;
+      if (!id) return;
+      if (e.target.closest('.js-duzenle')) { acDuzenle(id); return; }
+      if (e.target.closest('.js-sil')) { mSil(id); return; }
+      if (e.target.closest('.js-detay') || e.target.tagName === 'TD') { acDetay(id); return; }
+    };
 
     var topSayfa = Math.ceil(top / PER);
     var pg = document.getElementById('pag');
