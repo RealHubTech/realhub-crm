@@ -340,7 +340,7 @@ function render() {
       var isSecili = seciliHas(m.id);
       var mid = m.id;
       html += '<tr class="' + (isSecili ? 'secili' : '') + '" style="cursor:pointer" data-id="' + mid + '">';
-      html += '<td onclick="event.stopPropagation()"><input type="checkbox" ' + (isSecili ? 'checked' : '') + ' onchange="togSec(this.closest('tr').dataset.id,this.checked)"></td>';
+      html += '<td onclick="event.stopPropagation()"><input type="checkbox" ' + (isSecili ? 'checked' : '') + ' onchange="togSec(this.closest(&quot;tr&quot;).dataset.id,this.checked)"></td>';
       html += '<td class="js-detay"><div style="display:flex;align-items:center;gap:10px"><div class="avatar">' + initials(m.ad, m.soyad) + '</div><div><div style="font-weight:500">' + (m.ad||'') + ' ' + (m.soyad||'') + '</div>' + (m['not'] ? '<div style="font-size:11px;color:var(--t2)">' + (m['not'].length > 45 ? m['not'].slice(0,45) + '...' : m['not']) + '</div>' : '') + '</div></div></td>';
       html += '<td class="js-detay" style="font-family:DM Mono,monospace">' + (m.tel || '-') + '</td>';
       html += '<td class="js-detay" style="color:var(--t2)">' + (m.mail || '-') + '</td>';
