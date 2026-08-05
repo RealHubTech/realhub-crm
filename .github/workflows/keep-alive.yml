@@ -19,6 +19,5 @@ jobs:
           CLEAN_URL="${CLEAN_URL%/}"
           
           echo "Sending request to API..."
-          curl -i -s -X GET "$CLEAN_URL/rest/v1/" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
