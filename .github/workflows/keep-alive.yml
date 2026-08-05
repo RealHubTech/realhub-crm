@@ -2,25 +2,26 @@ name: Supabase Keep Alive
 
 on:
   schedule:
+    # Her 3 günde bir UTC 00:00'da çalışır
     - cron: '0 0 */3 * *'
   workflow_dispatch:
 
 jobs:
   ping-supabase:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Send Ping Request to Supabase API
+      - name: Ping Supabase API
         run: |
-          # URL içindeki olası tırnak ve boşlukları temizler
+          # Secret içindeki olası tırnak ve boşlukları temizle
           RAW_URL="${{ secrets.SUPABASE_URL }}"
           CLEAN_URL=$(echo "$RAW_URL" | tr -d '"' | tr -d "'" | xargs)
-          
-          # URL sonunda / varsa temizler
+
+          # Sondaki "/" varsa kaldır
           CLEAN_URL="${CLEAN_URL%/}"
-          
-          echo "Sending request to API..."
+
+          echo "Sending request to: $CLEAN_URL/rest/v1/"
+
           curl -i -s -X GET "$CLEAN_URL/rest/v1/" \
-  -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-  -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
